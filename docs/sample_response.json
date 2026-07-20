@@ -1,0 +1,6 @@
+{
+  "attrition_prediction": "Yes",
+  "attrition_probability": 0.9968,
+  "risk_level": "High",
+  "model_name": "XGBoost"
+}

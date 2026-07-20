@@ -1,0 +1,111 @@
+{
+  "info": {
+    "name": "Employee Attrition Prediction API",
+    "description": "Requests for the FastAPI service in app/main.py that predicts employee attrition.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Predict - High Risk Employee",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Age\": 41,\n  \"BusinessTravel\": \"Travel_Rarely\",\n  \"Department\": \"Sales\",\n  \"DistanceFromHome\": 6,\n  \"Education\": 2,\n  \"EducationField\": \"Life Sciences\",\n  \"Gender\": \"Female\",\n  \"JobLevel\": 2,\n  \"JobRole\": \"Sales Executive\",\n  \"MaritalStatus\": \"Single\",\n  \"MonthlyIncome\": 62000,\n  \"NumCompaniesWorked\": 8,\n  \"PercentSalaryHike\": 11,\n  \"StockOptionLevel\": 0,\n  \"TotalWorkingYears\": 8,\n  \"TrainingTimesLastYear\": 0,\n  \"YearsAtCompany\": 6,\n  \"YearsSinceLastPromotion\": 0,\n  \"YearsWithCurrManager\": 5,\n  \"EnvironmentSatisfaction\": 1,\n  \"JobSatisfaction\": 4,\n  \"WorkLifeBalance\": 1,\n  \"JobInvolvement\": 3,\n  \"PerformanceRating\": 3,\n  \"avg_work_hours\": 9.6\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/predict",
+          "host": ["{{baseUrl}}"],
+          "path": ["predict"]
+        }
+      }
+    },
+    {
+      "name": "Predict - Low Risk Employee",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Age\": 29,\n  \"BusinessTravel\": \"Non-Travel\",\n  \"Department\": \"Research & Development\",\n  \"DistanceFromHome\": 2,\n  \"Education\": 4,\n  \"EducationField\": \"Medical\",\n  \"Gender\": \"Male\",\n  \"JobLevel\": 3,\n  \"JobRole\": \"Research Scientist\",\n  \"MaritalStatus\": \"Married\",\n  \"MonthlyIncome\": 95000,\n  \"NumCompaniesWorked\": 1,\n  \"PercentSalaryHike\": 14,\n  \"StockOptionLevel\": 1,\n  \"TotalWorkingYears\": 6,\n  \"TrainingTimesLastYear\": 3,\n  \"YearsAtCompany\": 5,\n  \"YearsSinceLastPromotion\": 1,\n  \"YearsWithCurrManager\": 3,\n  \"EnvironmentSatisfaction\": 4,\n  \"JobSatisfaction\": 4,\n  \"WorkLifeBalance\": 3,\n  \"JobInvolvement\": 3,\n  \"PerformanceRating\": 3,\n  \"avg_work_hours\": 7.8\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/predict",
+          "host": ["{{baseUrl}}"],
+          "path": ["predict"]
+        }
+      }
+    },
+    {
+      "name": "Predict - Missing Survey Fields (imputation)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Age\": 55,\n  \"BusinessTravel\": \"Travel_Frequently\",\n  \"Department\": \"Human Resources\",\n  \"DistanceFromHome\": 20,\n  \"Education\": 1,\n  \"EducationField\": \"Human Resources\",\n  \"Gender\": \"Male\",\n  \"JobLevel\": 1,\n  \"JobRole\": \"Human Resources\",\n  \"MaritalStatus\": \"Divorced\",\n  \"MonthlyIncome\": 15000,\n  \"NumCompaniesWorked\": null,\n  \"PercentSalaryHike\": 20,\n  \"StockOptionLevel\": 0,\n  \"TotalWorkingYears\": null,\n  \"TrainingTimesLastYear\": 1,\n  \"YearsAtCompany\": 1,\n  \"YearsSinceLastPromotion\": 0,\n  \"YearsWithCurrManager\": 0,\n  \"EnvironmentSatisfaction\": null,\n  \"JobSatisfaction\": null,\n  \"WorkLifeBalance\": null,\n  \"JobInvolvement\": 1,\n  \"PerformanceRating\": 3,\n  \"avg_work_hours\": 10.5\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/predict",
+          "host": ["{{baseUrl}}"],
+          "path": ["predict"]
+        }
+      }
+    },
+    {
+      "name": "Predict - Invalid Input (422)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Age\": 30\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/predict",
+          "host": ["{{baseUrl}}"],
+          "path": ["predict"]
+        }
+      }
+    }
+  ]
+}

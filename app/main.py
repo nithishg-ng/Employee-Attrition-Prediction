@@ -1,12 +1,13 @@
-
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 import joblib
 from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse, RedirectResponse
 
-from src.preprocessing import transform
-from src.schemas import EmployeeFeatures, HealthResponse, PredictionResponse
+from app.preprocessing import transform
+from app.schemas import EmployeeFeatures, HealthResponse, PredictionResponse
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODEL_PATH = BASE_DIR / "models" / "best_model.pkl"
@@ -20,7 +21,8 @@ async def lifespan(app: FastAPI):
     if not MODEL_PATH.exists() or not PREPROCESSING_PATH.exists():
         raise RuntimeError(
             "Model artifacts not found. Run notebooks/data_preprocessing.ipynb "
-            "and notebooks/model_training.ipynb first."
+            "and notebooks/model_training.ipynb first to generate "
+            "models/preprocessing_objects.pkl and models/best_model.pkl."
         )
 
     model_bundle = joblib.load(MODEL_PATH)
@@ -42,6 +44,14 @@ app = FastAPI(
 )
 
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=422,
+        content={"detail": "Invalid input", "errors": exc.errors()},
+    )
+
+
 def _risk_level(probability: float) -> str:
     if probability >= 0.6:
         return "High"
@@ -50,7 +60,12 @@ def _risk_level(probability: float) -> str:
     return "Low"
 
 
-@app.get("/", response_model=HealthResponse)
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse(url="/docs")
+
+
+@app.get("/health", response_model=HealthResponse, tags=["Health"])
 def health_check():
     return HealthResponse(
         status="ok",
@@ -59,7 +74,7 @@ def health_check():
     )
 
 
-@app.post("/predict", response_model=PredictionResponse)
+@app.post("/predict", response_model=PredictionResponse, tags=["Prediction"])
 def predict(employee: EmployeeFeatures):
     try:
         features = transform(employee, ml_objects["preprocessing"])
